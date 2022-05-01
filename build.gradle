@@ -1,0 +1,32 @@
+buildscript {
+    ext.kotlin_version = "1.5.30"
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://maven.google.com" }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.1.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.20"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.8.0"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://maven.google.com" }
+        maven { url 'https://jitpack.io' }
+    }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions.allWarningsAsErrors = false
+        kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.time.ExperimentalTime"]
+        kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"]
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
