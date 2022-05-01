@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
-import android.icu.util.Calendar
 import android.icu.util.TimeZone
 import android.net.Uri
 import android.os.Bundle
@@ -153,6 +152,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun pushEventToCalendar(calId: String, inputDate: DateTime? = null) {
+        val permissions = dangerousPermissions.filter { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }.toTypedArray()
+        if (permissions.isNotEmpty()) {
+            requestPermissions(permissions, REQUEST_CODE_PERMISSION)
+            return
+        }
         val startDate = inputDate ?: viewModel.dateLiveData.value!!
         val values = ContentValues().apply {
             put(CalendarContract.Events.DTSTART, startDate.millis)
